@@ -1,5 +1,5 @@
 var mongoClient = require("mongodb").MongoClient;
-
+var tracker = require("tracker");
 
 var url = "mongodb://127.0.0.1:27017/"
 
@@ -14,17 +14,18 @@ async function run(){
        const actDB = client.db("practiceDB");
        const activities = actDB.collection("activities");
 
-       const query = { user: { $exists: true }};
+       const query = { user: { $exists: true } };
 
        const cursor = activities.find(query, {
-	       projection: { _id:0 , activity: 1, distance: 1, user: 1}});
+	       projection: { _id:0 , activity: 1, distance: 1, weight: 1, time: 1, user: 1}});
 
        if (( await cursor.count())== 0){
 	   console.log("No docs found!");
        }
-
+       
        await cursor.forEach(item =>{ 
-	       console.log(item)
+	       let current = new tracker(item.activity.type, item.weight, item.distance, item.time);       
+	       console.log(`${item.user} burned ${current.calculate()} calories by ${item.activity.type}! `);
 	   });
     } finally{
 	await client.close();
