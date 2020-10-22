@@ -11,13 +11,13 @@ async function run(){
 	await client.connect({useUnifiedTopology: true});
 	
 
-       const actDB = client.db("activityDB");
+       const actDB = client.db("practiceDB");
        const activities = actDB.collection("activities");
 
-       const query = { distance: { $lt: 5 }};
+       const query = { user: { $exists: true }};
 
        const cursor = activities.find(query, {
-	       projection: { _id:0 , activity: 1, distance: 1}});
+	       projection: { _id:0 , activity: 1, distance: 1, user: 1}});
 
        if (( await cursor.count())== 0){
 	   console.log("No docs found!");

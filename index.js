@@ -14,16 +14,18 @@ async function run(){
        const actDB = client.db("practiceDB");
        const activities = actDB.collection("activities");
 
-       const query = { distance: { $lt: 5 }};
+       const query = { user: { $exists: true }};
 
        const cursor = activities.find(query, {
-	       projection: { _id:0 , activity: 1, distance: 1}});
+	       projection: { _id:0 , activity: 1, distance: 1, user: 1}});
 
        if (( await cursor.count())== 0){
 	   console.log("No docs found!");
        }
 
-       await cursor.forEach(console.dir);
+       await cursor.forEach(item =>{ 
+	       console.log(item)
+	   });
     } finally{
 	await client.close();
     }
