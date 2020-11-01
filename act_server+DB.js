@@ -1,12 +1,12 @@
 var tracker = require("tracker");
 var http = require("http");
 var qString = require("querystring");
-var mongoClient = require("mongodb").MongoClient;
+//var mongoClient = require("mongodb").MongoClient;
 //this calls the let db={}; and instantiates the db for us
 let dbManager = require('./dbManager'); 
 //local mongo instance
-var url = "mongodb://127.0.0.1:27017/"
-const client = new mongoClient(url);
+//var url = "mongodb://127.0.0.1:27017/"
+//const client = new mongoClient(url);
 
 
 //This will take a set of properties that are coming in from a "POST"
@@ -137,7 +137,8 @@ async  (req, res)=>{
 			if (prop != "user" && prop != "activity.type"){
 			    val = Number(postParams.value);
 			} 
-			//simple equality search
+			//simple equality search. using [] allows a variable
+			//in the property name 
 			let searchDoc = { [prop] : val };
 			try{
 			    let cursor = col.find(searchDoc,  {
@@ -148,12 +149,12 @@ async  (req, res)=>{
 			} catch (e){
 			    console.log(e.message);
 			    res.writeHead(404);
-			    res.write("<h1> ERROR 404. Page NOT FOUND</h1>");
-			    res.end("<br><br>" + e.message + "<br>");
+		res.write("<html><body><h1> ERROR 404. Page NOT FOUND</h1>");
+			    res.end("<br>" + e.message + "<br></body></html>");
 			}
 		    } else {
 			res.writeHead(404);
-			res.end("<h1> ERROR 404. Page NOT FOUND</h1><br>");
+		res.end("<html><body><h1> ERROR 404. Page NOT FOUND</h1><br>");
 		    }
 		} else {
 		    if (urlOBJ.pathname == "/insert"){
@@ -173,7 +174,9 @@ async  (req, res)=>{
 	}else if (urlOBJ.pathname == "/search"){
 	    //Initial GET to search returns a blank page
 	    searchResp(null, res);
-	} else {
+	} else if (urlOBJ.pathname == "/"){
+	    res.end('<html><body><br><br><a href="/insert">home/insert</a>&emsp;&emsp;<a href="/search">search Page</a></body></html>');
+	}else {
 	    res.writeHead(404);
 	    res.end("<h1> ERROR 404. Page NOT FOUND</h1><br><br>");
 	}
@@ -182,7 +185,7 @@ async  (req, res)=>{
 	console.log("Closing DB Connection");
 	await dbManager.close();
     }).listen(3000, async ()=> {
-	    //start the DB connection
+	    //start and wait for the DB connection
 	    try{
 		await dbManager.get("practiceDB");
 	    } catch (e){

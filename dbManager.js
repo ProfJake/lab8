@@ -33,6 +33,7 @@ let myDB; //let provides closure, so only one local copy of our db. Th
 database.connect = async function(dbName){
     try{
 	await mongoClient.connect();
+	await mongoClient.db("admin").command({ ping: 1 });
 
 	myDB=mongoClient.db(dbName);
 	
