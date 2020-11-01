@@ -110,7 +110,7 @@ async  (req, res)=>{
 			
 			try{
 			    //if the data is bad, object creation throws an 
-			    //error (as we have seen since Week 2).
+			    //error (as we have seen since Week 4).
 			    //And no document will be inserted
 			    var curTracker = new tracker(postParams.activity,
 							 postParams.weight,
