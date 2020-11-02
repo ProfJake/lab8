@@ -30,7 +30,7 @@ let myDB; //let provides closure, so only one local copy of our db. Th
 
 //you can call connect in your code, but it is not advised, it is safer to use
 //"get" to initialize and use connections.
-database.connect = async function(dbName){
+var connect = async function(dbName){
     try{
 	await mongoClient.connect();
 	await mongoClient.db("admin").command({ ping: 1 });
@@ -55,7 +55,7 @@ database.get = function(dbName){
 	//	console.log("Already connected!");
 	return myDB;
     } else {
-	return this.connect(dbName);
+	return connect(dbName);
     }
 }
 //call close in your apps when you want to close the DB connection
