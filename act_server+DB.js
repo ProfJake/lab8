@@ -116,7 +116,7 @@ async  (req, res)=>{
 							 postParams.weight,
 							 postParams.distance,
 							 postParams.time);
-			    calories = currentTracker.calculate();
+			    calories = curTracker.calculate();
 			  			 
 			    //convert params to a document for Mongo
 			    let curDoc = docifyActivity(postParams);
