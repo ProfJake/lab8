@@ -13,8 +13,7 @@ let dbManager = require('./dbManager');
 //And transform them into a document for inserting into the "activities"
 // collection
 function docifyActivity(params){
-    let doc = { activity: { type: params.activity }, weight: params.weight,
-		distance: params.distance, time: params.time, user: params.user};
+    let doc = { activity: { type: params.activity.toString().toLowerCase() }, weight: Number(params.weight), distance: Number(params.distance), time: Number(params.time), user: params.user};
     return doc;
 }
 
@@ -142,7 +141,7 @@ async  (req, res)=>{
 			let searchDoc = { [prop] : val };
 			try{
 			    let cursor = col.find(searchDoc,  {
-				    projection: { _id:0 , activity: 1, distance: 1, user: 1, time: 1, weight: 1}});
+				projection: { _id:0 , activity: 1, distance: 1, user: 1, time: 1, weight: 1}}).sort({distance: -1});
 			    let resultOBJ={data: cursor, [prop]  : val, prop: prop};
 
 			    searchResp(resultOBJ, res);//call the searchPage
